@@ -12,8 +12,19 @@ import os
 
 
 class DemucsProcessor:
-    def __init__(self, device, model_name="htdemucs"):
-        self.device = device
+    def __init__(self, device='auto', model_name="htdemucs"):
+        if device == 'auto':
+            if th.has_mps:
+                self.device = "mps"
+            elif th.cuda.is_available():
+                self.device = "cuda"
+            else:
+                self.device = "cpu"
+        else:
+            self.device = device
+
+            
+
         self.loaded_model_name = model_name
         self.loaded_model = self.load_model(self.loaded_model_name)
 
